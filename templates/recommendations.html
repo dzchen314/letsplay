@@ -1,0 +1,21 @@
+{% from "partials/_formhelpers.html" import render_field %}
+<html>
+{% include "partials/head.html" %}
+<body>
+  {{steamid}}
+  {{user_games}}
+  <br>
+  <br>
+  <br>
+  <p>You should try {{common_game1}} with {{common_friend1}}!</p>
+  <p>You should try {{common_game2}} with {{common_friend2}}!</p>
+  <p>You should try {{common_game3}} with {{common_friend3}}!</p>
+  <p>You should try {{common_game4}} with {{common_friend4}}!</p>
+  <br>
+  <br>
+  <br>
+  {{user_recs}}
+  <br>
+  {{friends_recs}}
+</body>
+</html>
