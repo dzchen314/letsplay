@@ -1,0 +1,91 @@
+<html>
+<!--{% include "partials/head.html" %}-->
+<link rel="stylesheet" href="../static/libraries/materializepartial.css">
+<link rel="stylesheet" href="../static/libraries/main.css">
+<!-- <script src = "{{ url_for('static', filename='scripts/friendChange.js') }}"></script> -->
+
+<body>
+<!--<a href="https://github.com/dzchen314/deep-perfumes-potion-app"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>-->
+<nav>
+  <div class="nav-wrapper">
+    <a href = "/" class="brang-logo left"><img class="image" id="logo" src="{{ url_for('static', filename = 'assets/multiplayer.png') }}"  width="60"></a>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="/">Home<span class="sr-only"></span></a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="/about">Behind the scenes</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="/about_me">About me</a>
+            </li>
+          </ul>
+        </div>
+  </div>
+</nav>
+
+<div style="position: relative; left:60px">
+    <h3>Ready Player 2:</h3>
+</div>
+
+<div style="position: relative; left:60px">
+  <h5>Hi {{steamid}},</h5>
+  <h5>who do you want to play with?</h5>
+  <select class="browser-default" id = "friends" onchange = "friendChanged()" onfocus="this.selectedIndex = -1;">
+    {% for friend in friends_ids %}
+      <option value ="{{ friend }}">{{ friend }}</option>
+    {% endfor %}
+  </select>
+
+<body>
+  <div id="_intersect">{{intersect}}</div>
+  <h5 id ="message"></h5>
+  <!-- <h5 id ="debug"></h5> -->
+  <a id = "rec1-link"><img id ="rec1"></a>
+  <a id = "rec2-link"><img id ="rec2"></a>
+  <a id = "recrand"><img id ="recrandom"></a>
+  <a id = "rec3-link"><img id ="rec3"></a>
+  <a id = "rec4-link"><img id ="rec4"></a>
+  <a id = "rec5-link"><img id ="rec5"></a>
+  <!-- <a id = "rec6-link"><img id ="rec6"></a>
+  <a id = "rec7-link"><img id ="rec7"></a>
+  <a id = "rec8-link"><img id ="rec8"></a> -->
+</div>
+</body>
+
+<script>
+function friendChanged() {
+  console.log("hello")
+  var friendid = document.getElementById('friends').value;
+  var intersect = {{rec_intersect|tojson}};
+  document.getElementById("message").innerHTML = "You and " + friendid + " should try:";
+
+  var i;
+  for (i = 0; i < 5; i++) {
+    var isrc = 'https://steamcdn-a.akamaihd.net/steam/apps/'+intersect[friendid][i]+'/header.jpg';
+    var img = document.getElementById("rec"+(i+1));
+    img.src = isrc;
+    var gsrc = 'https://store.steampowered.com/app/'+intersect[friendid][i];
+    var gamelink = document.getElementById("rec"+(i+1)+"-link");
+    gamelink.href = gsrc;
+  }
+  var multgames = {{multigames|tojson}};
+  var randomid = Math.floor(Math.random() * multgames.length);
+  var randomgame = multgames[randomid]
+  // document.getElementById("debug").innerHTML = randomgame;
+  var isrc = 'https://steamcdn-a.akamaihd.net/steam/apps/'+randomgame+'/header.jpg';
+  var img = document.getElementById("recrandom");
+  img.src = isrc;
+  var gsrc = 'https://store.steampowered.com/app/'+randomgame;
+  var gamelink = document.getElementById("recrand");
+  gamelink.href = gsrc;
+}
+</script>
+<br>
+<br>
+<br>
+<br>
+  <div><font size="1">Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></font></div>
+
+</body>
