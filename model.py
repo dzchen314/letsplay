@@ -36,6 +36,9 @@ with open(datapath + 'appidx_to_name.txt', 'rb') as fle:
 with open(datapath + 'appid_to_name.txt', 'rb') as fle:
     appid_to_name = pickle.load(fle)
 
+with open(datapath + 'multiplayer_games.txt', 'rb') as fle:
+    multiplayer_games = pickle.load(fle)
+
 
 #get game similarity matrix
 def get_game_similarity(model):
@@ -75,6 +78,7 @@ def get_user_games(steamid):
     except:
         return []
 
+#gets recommendations for the user (top 10)
 def get_user_recs(user_games):
     user_recs = {'appid':[]}
     for i in range(0,34):
@@ -82,7 +86,7 @@ def get_user_recs(user_games):
             try:
                 rec_id, rec_name = get_recs_from_appid(user_games[i]['appid'])
                 for i, r_id in enumerate(rec_id):
-                    if i < 5:
+                    if i < 6 and i > 0:
                         user_recs['appid'].append(r_id)
             except ValueError:
                 pass
@@ -106,8 +110,10 @@ def get_friends_games(steamid):
 
     return friends_ids, friends_games
 
+#make lists of recommendations for friends based on their libraries (top 10)
 def get_friends_recs(friends_ids, friends_games):
     eachfriends_recs = {key:[] for key in friends_ids}
+    allfriends_recs = []
     for i, friend_id in enumerate(friends_ids):
         friends_games_ids, friends_games_tplayed = sort_games_by_playtime(friends_games[friend_id])
         for i, game_id in enumerate(friends_games_ids):
@@ -115,13 +121,14 @@ def get_friends_recs(friends_ids, friends_games):
                 rec_id, rec_name = get_recs_from_appid(game_id)
                 count = 0
                 for i, r_id in enumerate(rec_id):
-                    if count < 5:
+                    if count < 6 and i > 0 and is_multiplayer(r_id):
                         eachfriends_recs[friend_id].append(r_id)
+                        allfriends_recs.append(r_id)
                         count += 1
             except ValueError:
                 pass
 
-    return eachfriends_recs
+    return eachfriends_recs, allfriends_recs
 
 
 def sort_games_by_playtime(game_info):
@@ -132,20 +139,9 @@ def sort_games_by_playtime(game_info):
 
 	return userdf.appid.values, userdf.hours_played.values
 
-#check on the Steam website if the game is multiplayer
+#check on from a set if the game is multiplayer
 def is_multiplayer(appid):
-    req = session.get(BASE_URL+str(appid))
-    soup = BeautifulSoup(req.content, 'html.parser')
-    soup = soup.find_all('a', {'class': 'app_tag'})
-    tagwords = []
-    for words in soup:
-        tagwords.append(words)
-
-    for i, words in enumerate(tagwords):
-        if str(words).find('Multiplayer') >= 0:
-            return True
-
-    return False
+    return appid in set(multiplayer_games)
 
 #convert user input to steam ID
 def user_input_to_steamid(input_id):
