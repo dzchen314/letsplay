@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 
 datapath = './static/data/'
-api_key = 'CC4C540D5F3EAD2DD6E9B4235E179455'
+api_key = 'removed - replace with yours'
 
 BASE_URL = 'https://store.steampowered.com/app/'
 session = requests.Session()
